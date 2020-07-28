@@ -41,32 +41,15 @@ export default {
   components: {
     MyIngredients
   },
-  data () {
-    return {
-      cocktails: [],
-      ingredients: []
-    }
-  },
   created () {
-    db.collection('Cocktails').get()
-    .then(snapshot => {
-      snapshot.docs.forEach(doc => {
-        this.cocktails = [...this.cocktails, doc.data()]
-      })
-    }),
-    db.collection('Ingredients').get()
-    .then(snapshot => {
-        snapshot.docs.forEach(doc => {
-            this.ingredients = [...this.ingredients, doc.data()]
-        })
-    })
-  },
-  mounted () {
-    console.log('mounted')
+
+    this.$store.dispatch('fetchCocktails'),
+    this.$store.dispatch('fetchIngredients')
+
   },
   computed: {
     ownedIngredients() {
-      return this.ingredients.filter(ingredient => ingredient.Owned)
+      return this.$store.state.ingredients.filter(ingredient => ingredient.Owned)
     },
     possibleCocktails() {
       const newList = []
@@ -88,6 +71,9 @@ export default {
         })
       })
       return newList.filter((v,i,a) => a.findIndex(t => (t.Name === v.Name)) === i);
+    },
+    cocktails() {
+      return this.$store.state.cocktails
     }
   }
 }
