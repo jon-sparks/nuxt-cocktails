@@ -23,7 +23,10 @@ export const actions = {
         db.collection('Cocktails').onSnapshot(snapshot => {
             let changes = snapshot.docChanges()
             changes.forEach(change => {
-                cocktails.push(change.doc.data())
+                cocktails.push({
+                    id: change.doc.id,
+                    data: change.doc.data()
+                })
             })
         })
         commit("setCocktails", cocktails);
@@ -34,6 +37,7 @@ export const actions = {
             let changes = snapshot.docChanges()
             changes.forEach(change => {
                 ingredients.push(change.doc.data())
+                console.log(change.doc.data())
             })
         })
         commit("setIngredients", ingredients);

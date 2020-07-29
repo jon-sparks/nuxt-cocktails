@@ -3,6 +3,16 @@
     <Nuxt />
   </div>
 </template>
+<script>
+export default {
+  created () {
+
+    this.$store.dispatch('fetchCocktails'),
+    this.$store.dispatch('fetchIngredients')
+
+  }
+}
+</script>
 <style>
 html {
   font-family:
@@ -58,15 +68,6 @@ html {
   color: #fff;
   background-color: #35495e;
 }
-
-.box {
-  padding: 25px;
-  margin: 10px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 7px 20px -10px rgba(0,0,0,0.3);
-  /* background: linear-gradient(309deg, rgba(250,200,255,1) 0%, rgba(255,214,161,1) 100%); */
-}
 .container {
   margin: 0 auto;
   padding: 50px;
@@ -114,4 +115,5 @@ html {
   display: flex;
   justify-content: center;
 }
+
 </style>

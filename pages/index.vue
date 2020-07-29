@@ -8,24 +8,30 @@
 
       <div class="content-wrapper">
 
-        <div class="box">
-          <MyIngredients :ingredients="ingredients" :ownedIngredients="ownedIngredients"/>
-        </div>
+        <Box :title="'Your Ingredients'">
+          <ul>
+            <Ingredient v-for="ingredient in ownedIngredients" :id="ingredient.id" :ingredient="ingredient" :key="ingredient.id" />
+          </ul>
+          <form>
+              <input type="text" placeholder="Ingredient name" v-model="ingredientInput" />
+              <button v-on:click="submitNewIngredient">Add ingredient</button>
+          </form>
+        </Box>
 
-        <div class="box">
+        <!-- <div class="box">
           <div v-for="cocktail in cocktails" :key="cocktail.id">
             <h3>{{cocktail.Name}}</h3>
             <small v-for="ingredient in cocktail.Ingredients" :key="ingredient.id">
               {{ingredient}}, 
             </small>
           </div>
-        </div>
+        </div> -->
 
-        <div class="box">
+        <Box :title="'You can make:'">
           <div v-for="cocktail in possibleCocktails" :key="cocktail.Id">
-            {{cocktail.Name}}
+            {{cocktail.data.Name}}
           </div>
-        </div>
+        </Box>
 
 
       </div>
@@ -37,16 +43,25 @@
 <script>
 import db from '../plugins/firebaseinit'
 import MyIngredients from '../components/MyIngredients'
+import Ingredient from '../components/Ingredient'
+import Box from '../components/Box'
 export default {
+  data () {
+    return {
+      ingredientInput: ''
+    }
+  },
   components: {
-    MyIngredients
+    MyIngredients,
+    Ingredient,
+    Box
   },
-  created () {
+  // created () {
 
-    this.$store.dispatch('fetchCocktails'),
-    this.$store.dispatch('fetchIngredients')
+  //   this.$store.dispatch('fetchCocktails'),
+  //   this.$store.dispatch('fetchIngredients')
 
-  },
+  // },
   computed: {
     ownedIngredients() {
       return this.$store.state.ingredients.filter(ingredient => ingredient.Owned)
@@ -54,13 +69,13 @@ export default {
     possibleCocktails() {
       const newList = []
       this.cocktails.forEach(cocktail => {
-        const requiredLength = cocktail.Ingredients.length
+        const requiredLength = cocktail.data.Ingredients.length
         
         let currentLength = 0
         console.log('----------- ' + cocktail.Name + ' --------------')
         console.log('req length: ', requiredLength)
         this.ownedIngredients.forEach(ownedIngredient => {
-          if(cocktail.Ingredients.indexOf(ownedIngredient.Name) >= 0){
+          if(cocktail.data.Ingredients.indexOf(ownedIngredient.Name) >= 0){
             currentLength++
             console.log(currentLength)
             console.log(ownedIngredient.Name)
@@ -70,15 +85,44 @@ export default {
           }
         })
       })
-      return newList.filter((v,i,a) => a.findIndex(t => (t.Name === v.Name)) === i);
+      return newList.filter((v,i,a) => a.findIndex(t => (t.data.Name === v.data.Name)) === i);
     },
     cocktails() {
       return this.$store.state.cocktails
+    },
+    ingredients() {
+      return this.$store.state.ingredients
+    },
+    ingredientsFromCocktails() {
+      let newArr = []
+      this.$store.state.cocktails.forEach(cocktail => {
+        cocktail.Ingredients.forEach(ingredient => {
+          if(!newArr.includes(ingredient)){
+            newArr.push(ingredient)
+          }
+        })
+      })
+      return newArr
+    }
+  },
+  methods: {
+    submitNewIngredient: function(e) {
+        e.preventDefault()
+        db.collection("Ingredients").add({
+            Name: this.ingredientInput.toLowerCase(),
+            Owned: true
+        }).then(() => {
+            console.log('new ingredient added')
+        })
     }
   }
 }
 </script>
 
 <style>
-
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
 </style>

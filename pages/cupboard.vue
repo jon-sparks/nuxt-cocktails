@@ -4,10 +4,11 @@
           <h1>hi</h1>
           <form>
               <input type="text" placeholder="Ingredient name" v-model="ingredientInput" />
-              <input type="checkbox" v-model="ingredientOwned" />
-              <button v-on:click="submitNewIngredient">button</button>
+              <input id="owned-checkbox" type="checkbox" v-model="ingredientOwned" />
+              <label for="owned-checkbox">Do you currently have this ingredient?</label>
+              <button v-on:click="submitNewIngredient">Add ingredient</button>
           </form>
-          <h2 v-for="ingredient in ingredients">fgsdg</h2>
+          
       </div>
   </div>
 </template>
@@ -21,7 +22,14 @@ export default {
             ingredientOwned: false
         }
     },
-    props: ['ingredients'],
+    computed: {
+        cocktails() {
+            return this.$store.state.cocktails
+        },
+        ingredients() {
+            return this.$store.state.ingredients
+        }
+    },
     methods: {
         submitNewIngredient: function(e) {
             e.preventDefault()
