@@ -23,10 +23,12 @@ export const actions = {
         db.collection('Cocktails').onSnapshot(snapshot => {
             let changes = snapshot.docChanges()
             changes.forEach(change => {
-                cocktails.push({
-                    id: change.doc.id,
-                    data: change.doc.data()
-                })
+                if(change.type == 'added') {
+                    cocktails.push({
+                        id: change.doc.id,
+                        ...change.doc.data()
+                    })
+                }
             })
         })
         commit("setCocktails", cocktails);
@@ -35,11 +37,22 @@ export const actions = {
         let ingredients = []
         db.collection('Ingredients').onSnapshot(snapshot => {
             let changes = snapshot.docChanges()
+
             changes.forEach(change => {
-                ingredients.push(change.doc.data())
-                console.log(change.doc.data())
+                const { newIndex, oldIndex, doc, type } = change
+                if(change.type == 'added') {
+                    ingredients.push({
+                        id: change.doc.id,
+                        ...change.doc.data()
+                    })
+                } else if(change.type == 'removed'){
+                    ingredients.splice(oldIndex, 1)
+                }
             })
+            console.log(changes)
         })
         commit("setIngredients", ingredients);
     }
+
+
 }

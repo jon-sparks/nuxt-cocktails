@@ -1,14 +1,20 @@
 <template>
   <li class="ingredient">
-    <button>x</button>
+    <button @click="deleteIngredient">x</button>
     <h3>{{ingredient.Name}}</h3>
   </li>
 </template>
 
 <script>
-
+import db from '../plugins/firebaseinit'
 export default {
   props: ['ingredient'],
+  methods: {
+    deleteIngredient: function(e){
+      e.preventDefault()
+      db.collection('Ingredients').doc(this.ingredient.id).delete()
+    }
+  }
 }
 </script>
 
@@ -24,6 +30,9 @@ export default {
     height: 20px;
     border-radius: 50%;
     border: none;
+  }
+  h3 {
+    text-transform: capitalize;
   }
 }
 
