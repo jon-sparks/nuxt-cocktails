@@ -41,10 +41,7 @@ export const actions = {
             changes.forEach(change => {
                 const { newIndex, oldIndex, doc, type } = change
                 if(change.type == 'added') {
-                    ingredients.push({
-                        id: change.doc.id,
-                        ...change.doc.data()
-                    })
+                    ingredients.splice(newIndex, 0, {id: doc.id, ...doc.data()})
                 } else if(change.type == 'removed'){
                     ingredients.splice(oldIndex, 1)
                 }
