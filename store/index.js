@@ -20,7 +20,7 @@ export const actions = {
     
     fetchCocktails({ commit }) {
         let cocktails = []
-        db.collection('Cocktails').onSnapshot(snapshot => {
+        db.firestore().collection('Cocktails').onSnapshot(snapshot => {
             let changes = snapshot.docChanges()
             changes.forEach(change => {
                 if(change.type == 'added') {
@@ -35,7 +35,7 @@ export const actions = {
     },
     fetchIngredients({ commit }) {
         let ingredients = []
-        db.collection('Ingredients').onSnapshot(snapshot => {
+        db.firestore().collection('Ingredients').onSnapshot(snapshot => {
             let changes = snapshot.docChanges()
 
             changes.forEach(change => {

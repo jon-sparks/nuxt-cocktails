@@ -46,19 +46,18 @@
           </div>
 
           <ul>
-            <Ingredient v-for="ingredient in ownedIngredients" :ingredient="ingredient" :key="ingredient.id" />
+            <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient.id" />
           </ul>
           
         </Box>
 
         <Box :title="'My Menu'">
-          
+          <button v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">{{cocktail.Name}}</button>
 
-              
-              <!-- <Cocktail :cocktail="cocktail.id" /> -->
-              <button v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">{{cocktail.Name}}</button>
+          <Modal>
 
-          
+          </Modal>
+
         </Box>
 
       </div>
@@ -74,32 +73,32 @@ import MyIngredients from '../components/MyIngredients'
 import Ingredient from '../components/Ingredient'
 import Cocktail from '../components/Cocktail'
 import Box from '../components/Box'
+import Modal from '../components/Modal'
 export default {
   data () {
     return {
       ingredientInput: '',
       selectedCocktail: null,
-      isMethodOpen: false
+      isMethodOpen: false,
+      isModalOpen: false
     }
   },
   components: {
     MyIngredients,
     Ingredient,
     Cocktail,
-    Box
+    Box,
+    Modal
   },
   computed: {
-    ownedIngredients() {
-      return this.$store.state.ingredients.filter(ingredient => ingredient.Owned)
-    },
     possibleCocktails() {
       const newList = []
       this.cocktails.forEach(cocktail => {
         const requiredLength = cocktail.Ingredients.length
         
         let currentLength = 0
-        this.ownedIngredients.forEach(ownedIngredient => {
-          if(cocktail.Ingredients.indexOf(ownedIngredient.Name) >= 0){
+        this.ingredients.forEach(ingredient => {
+          if(cocktail.Ingredients.indexOf(ingredient.Name) >= 0){
             currentLength++
             if(currentLength === requiredLength){
               newList.push(cocktail)
@@ -137,12 +136,14 @@ export default {
   methods: {
     submitNewIngredient: function(e) {
         e.preventDefault()
-        db.collection("Ingredients").add({
-            Name: this.ingredientInput.toLowerCase(),
-            Owned: true
-        }).then(() => {
-            this.ingredientInput = ''
-        })
+        if(this.ingredientInput !== ''){
+          db.firestore().collection("Ingredients").add({
+              Name: this.ingredientInput.toLowerCase()
+          }).then(() => {
+              this.ingredientInput = ''
+          })
+        }
+
     },
     useSuggested: function(e) {
       this.ingredientInput = e.currentTarget.getAttribute('data-ingredient')
