@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :to="`/recipe?cocktail=${cocktail}`">Link</nuxt-link>
+  <button :data-cocktail="cocktail">button</button>
 </template>
 
 <script>

@@ -6,7 +6,30 @@
         My Cocktail Bar
       </h1>
 
-      <div class="content-wrapper">
+      <div class='content-wrapper' v-if="isMethodOpen">
+        <Box :title="`${currentCocktail.Name} Method`">
+          <button @click="toggleMethod" class="box-close">
+            <svg height="20" viewBox="0 0 64 64" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M54 30H14.101l15.278-14.552a2 2 0 10-2.759-2.897L9.172 29.171A3.978 3.978 0 008 32c0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552a1.999 1.999 0 001.38-3.448L14.038 34H54a2 2 0 000-4z"/></svg>
+            Back
+          </button>
+          <div class="box-content">
+            <div class="box-ingredients">
+              <h2>Ingredients</h2>
+              <ul>
+                <li v-for="ingredient in currentCocktail.Ingredients" :key="ingredient">
+                  {{ ingredient }}
+                </li>
+              </ul>
+            </div>
+            <div class="box-method">
+              <p>{{ currentCocktail.Method }}</p>
+            </div>
+          </div>
+          
+        </Box>
+      </div>
+
+      <div class="content-wrapper" v-else>
 
         <Box :title="'My Ingredients'">
 
@@ -29,18 +52,17 @@
         </Box>
 
         <Box :title="'My Menu'">
-          <div v-for="cocktail in possibleCocktails" :key="cocktail.id">
-            <div>
-              {{cocktail.Name}}
-              <Cocktail :cocktail="cocktail.id" />
-            </div>
-          </div>
+          
+
+              
+              <!-- <Cocktail :cocktail="cocktail.id" /> -->
+              <button v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">{{cocktail.Name}}</button>
+
+          
         </Box>
 
-
-
-
       </div>
+
 
     </div>
   </div>
@@ -55,7 +77,9 @@ import Box from '../components/Box'
 export default {
   data () {
     return {
-      ingredientInput: ''
+      ingredientInput: '',
+      selectedCocktail: null,
+      isMethodOpen: false
     }
   },
   components: {
@@ -104,6 +128,10 @@ export default {
     },
     suggested(){
       return this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput))
+    },
+    currentCocktail(){
+      let currentCocktail = this.cocktails.filter(cocktail => cocktail.id === this.selectedCocktail)
+      return currentCocktail[0]
     }
   },
   methods: {
@@ -119,6 +147,14 @@ export default {
     useSuggested: function(e) {
       this.ingredientInput = e.currentTarget.getAttribute('data-ingredient')
       this.submitNewIngredient(e)
+    },
+    showMethod: function(e) {
+      e.preventDefault()
+      this.selectedCocktail = e.currentTarget.getAttribute('data-cocktail')
+      this.toggleMethod()
+    },
+    toggleMethod: function() {
+      this.isMethodOpen = !this.isMethodOpen
     }
   }
 }
