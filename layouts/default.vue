@@ -7,8 +7,8 @@
 export default {
   created () {
 
-    this.$store.dispatch('fetchCocktails'),
-    this.$store.dispatch('fetchIngredients')
+    this.$store.dispatch('fetchCocktails')
+    // this.$store.dispatch('fetchIngredients')
 
   }
 }

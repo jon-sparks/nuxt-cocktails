@@ -35,18 +35,18 @@
 
           <div class="new-ingredient">
             <form>
-              <input type="text" placeholder="New ingredient..." v-model="ingredientInput" />
+              <input type="text" placeholder="New ingredient..." v-model="ingredientInput" @focus="inputFlag = true" @blur="inputFlag = false" />
               <button v-on:click="submitNewIngredient">
                 <svg height="568.889" viewBox="0 0 426.667 426.667" width="568.889" xmlns="http://www.w3.org/2000/svg"><path d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"/></svg>
               </button>
             </form>
-            <div v-if="ingredientInput.length" class="suggestions">
+            <div v-if="ingredientInput.length && inputFlag" class="suggestions">
               <p v-for="suggestion in suggested" @click="useSuggested" :data-ingredient="suggestion" :key="suggestion">{{suggestion}}</p>
             </div>
           </div>
 
           <ul>
-            <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient.id" />
+            <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient" v-on:deleteIngredient="updateIngredients($event)" />
           </ul>
           
         </Box>
@@ -80,7 +80,9 @@ export default {
       ingredientInput: '',
       selectedCocktail: null,
       isMethodOpen: false,
-      isModalOpen: false
+      isModalOpen: false,
+      ingredients: null,
+      inputFlag: false
     }
   },
   components: {
@@ -90,6 +92,13 @@ export default {
     Box,
     Modal
   },
+  created() {
+    // this.newIngredients = JSON.parse(this.window.localStorage.getItem('ingredients'))
+    if(process.browser){
+      this.ingredients = JSON.parse(localStorage.getItem('ingredients'))
+    }
+    
+  },
   computed: {
     possibleCocktails() {
       const newList = []
@@ -98,7 +107,7 @@ export default {
         
         let currentLength = 0
         this.ingredients.forEach(ingredient => {
-          if(cocktail.Ingredients.indexOf(ingredient.Name) >= 0){
+          if(cocktail.Ingredients.indexOf(ingredient) >= 0){
             currentLength++
             if(currentLength === requiredLength){
               newList.push(cocktail)
@@ -111,9 +120,9 @@ export default {
     cocktails() {
       return this.$store.state.cocktails
     },
-    ingredients() {
-      return this.$store.state.ingredients
-    },
+    // ingredients() {
+    //   return this.$store.state.ingredients
+    // },
     ingredientsFromCocktails() {
       let newArr = []
       this.$store.state.cocktails.forEach(cocktail => {
@@ -137,11 +146,14 @@ export default {
     submitNewIngredient: function(e) {
         e.preventDefault()
         if(this.ingredientInput !== ''){
-          db.firestore().collection("Ingredients").add({
-              Name: this.ingredientInput.toLowerCase()
-          }).then(() => {
-              this.ingredientInput = ''
-          })
+          // db.firestore().collection("Ingredients").add({
+          //     Name: this.ingredientInput.toLowerCase()
+          // }).then(() => {
+          //     this.ingredientInput = ''
+          // })
+          let newArray = [...this.ingredients, this.ingredientInput.toLowerCase()]
+          localStorage.setItem('ingredients', JSON.stringify(newArray))
+          this.ingredients = JSON.parse(localStorage.getItem('ingredients'))
         }
 
     },
@@ -156,6 +168,10 @@ export default {
     },
     toggleMethod: function() {
       this.isMethodOpen = !this.isMethodOpen
+    },
+    updateIngredients: function(updatedIngredient) {
+      console.log(updatedIngredient)
+      this.ingredients = updatedIngredient
     }
   }
 }

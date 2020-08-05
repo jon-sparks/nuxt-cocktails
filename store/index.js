@@ -3,8 +3,8 @@ import db from '../plugins/firebaseinit'
 export const strict = false
 
 export const state = () => ({
-    cocktails: [],
-    ingredients: []
+    cocktails: []
+    // ingredients: []
 })
 
 export const mutations = {
@@ -34,21 +34,22 @@ export const actions = {
         commit("setCocktails", cocktails);
     },
     fetchIngredients({ commit }) {
-        let ingredients = []
-        db.firestore().collection('Ingredients').onSnapshot(snapshot => {
-            let changes = snapshot.docChanges()
+        // let ingredients = []
+        // db.firestore().collection('Ingredients').onSnapshot(snapshot => {
+        //     let changes = snapshot.docChanges()
 
-            changes.forEach(change => {
-                const { newIndex, oldIndex, doc, type } = change
-                if(change.type == 'added') {
-                    ingredients.splice(newIndex, 0, {id: doc.id, ...doc.data()})
-                } else if(change.type == 'removed'){
-                    ingredients.splice(oldIndex, 1)
-                }
-            })
-            console.log(changes)
-        })
-        commit("setIngredients", ingredients);
+        //     changes.forEach(change => {
+        //         const { newIndex, oldIndex, doc, type } = change
+        //         if(change.type == 'added') {
+        //             ingredients.splice(newIndex, 0, {id: doc.id, ...doc.data()})
+        //         } else if(change.type == 'removed'){
+        //             ingredients.splice(oldIndex, 1)
+        //         }
+        //     })
+        //     console.log(changes)
+        // })
+        // ingredients = localStorage.getItem('ingredients')
+        // commit("setIngredients", JSON.parse(ingredients));
     }
 
 

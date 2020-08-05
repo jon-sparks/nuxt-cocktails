@@ -2,7 +2,7 @@
   <div>
       <h3>modal</h3>
       
-            <form>
+            <!-- <form>
                 <input type="text" placeholder="email" v-model="username"/>
                 <input type="text" placeholder="email" v-model="password" />
                 <button @click="signUp">Sign up</button>
@@ -12,7 +12,7 @@
                 <input type="text" placeholder="email" v-model="username"/>
                 <input type="text" placeholder="email" v-model="password" />
                 <button @click="signIn">Sign in</button>
-            </form>
+            </form> -->
       
   </div>
 </template>
@@ -28,21 +28,21 @@ export default {
         }
     },
     methods: {
-        signUp: function(e) {
-            e.preventDefault()
-            db.auth().createUserWithEmailAndPassword(this.username, this.password).catch(function(error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // ...
-            })
-        },
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // signUp: function(e) {
+        //     e.preventDefault()
+        //     db.auth().createUserWithEmailAndPassword(this.username, this.password).catch(function(error) {
+        //         // Handle Errors here.
+        //         var errorCode = error.code;
+        //         var errorMessage = error.message;
+        //         // ...
+        //     })
+        // },
+        // firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
   // Handle Errors here.
-  var errorCode = error.code;
-var errorMessage = error.message;   
-  // ...
-});
+//   var errorCode = error.code;
+// var errorMessage = error.message;   
+//   // ...
+// });
     }
 }
 </script>
