@@ -13,7 +13,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
 html {
   font-family:
     'Source Sans Pro',
@@ -40,34 +40,6 @@ html {
   margin: 0;
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-}
 .container {
   margin: 0 auto;
   padding: 50px;
@@ -92,10 +64,14 @@ html {
     sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 50px;
   color: #35495e;
   letter-spacing: 1px;
   margin-bottom: 50px;
+
+  @media(min-width: 900px){
+    font-size: 100px;
+  }
 }
 
 .subtitle {
@@ -113,6 +89,7 @@ html {
 .content-wrapper {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
 }

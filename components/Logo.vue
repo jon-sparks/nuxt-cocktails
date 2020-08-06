@@ -15,11 +15,14 @@
   </svg>
 </template>
 
-<style>
+<style lang="scss">
 .logo {
   animation: 1s appear;
   margin: auto;
-  max-width: 200px;
+  max-width: 100px;
+  @media(min-width: 768px){
+    max-width: 200px;
+  }
 }
 
 @keyframes appear {
