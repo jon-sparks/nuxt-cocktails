@@ -35,13 +35,18 @@
 
           <div class="new-ingredient">
             <form>
-              <input type="text" placeholder="New ingredient..." v-model="ingredientInput" @focus="inputFlag = true" @blur="inputFlag = false" />
+              <input type="text" placeholder="New ingredient..." v-model="ingredientInput" @focus="inputFlag = true" />
               <button v-on:click="submitNewIngredient">
                 <svg height="568.889" viewBox="0 0 426.667 426.667" width="568.889" xmlns="http://www.w3.org/2000/svg"><path d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"/></svg>
               </button>
             </form>
               <div v-if="ingredientInput.length && inputFlag" class="suggestions">
-                <p v-for="suggestion in suggested" @click="useSuggested" :data-ingredient="suggestion" :key="suggestion">{{suggestion}}</p>
+                <div v-if="typeof suggested === 'string'">
+                  <p>{{suggested}}</p>
+                </div>
+                <div v-else>
+                  <p v-for="suggestion in suggested" @click="useSuggested" :data-ingredient="suggestion" :key="suggestion">{{suggestion}}</p>
+                </div>
               </div>
           </div>
 
@@ -59,7 +64,7 @@
 
         <Box :title="'My Menu'">
           <client-only>
-            <div v-if="possibleCocktails !== 'undefined'">
+            <div v-if="possibleCocktails && possibleCocktails.length > 0">
               <button  class="cocktail-button" v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">
                 <svg id="_x31_" enable-background="new 0 0 24 24" height="21" viewBox="0 0 24 24" width="21" xmlns="http://www.w3.org/2000/svg"><path d="m20.5 24h-12c-1.378 0-2.5-1.121-2.5-2.5v-15c0-1.379 1.122-2.5 2.5-2.5h12c1.378 0 2.5 1.121 2.5 2.5v15c0 1.379-1.122 2.5-2.5 2.5zm-12-19c-.827 0-1.5.673-1.5 1.5v15c0 .827.673 1.5 1.5 1.5h12c.827 0 1.5-.673 1.5-1.5v-15c0-.827-.673-1.5-1.5-1.5z"/><path d="m4.5 21h-1c-1.378 0-2.5-1.121-2.5-2.5v-16c0-1.379 1.122-2.5 2.5-2.5h12c1.378 0 2.5 1.121 2.5 2.5 0 .276-.224.5-.5.5s-.5-.224-.5-.5c0-.827-.673-1.5-1.5-1.5h-12c-.827 0-1.5.673-1.5 1.5v16c0 .827.673 1.5 1.5 1.5h1c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 17h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 21h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 13h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 9h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/></svg>
                 {{cocktail.Name}}
@@ -133,9 +138,6 @@ export default {
     cocktails() {
       return this.$store.state.cocktails
     },
-    // ingredients() {
-    //   return this.$store.state.ingredients
-    // },
     ingredientsFromCocktails() {
       let newArr = []
       this.$store.state.cocktails.forEach(cocktail => {
@@ -148,7 +150,7 @@ export default {
       return newArr
     },
     suggested(){
-      return this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput))
+      return this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput)).length > 0 ? this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput)) : 'No results...'
     },
     currentCocktail(){
       let currentCocktail = this.cocktails.filter(cocktail => cocktail.id === this.selectedCocktail)
@@ -248,10 +250,11 @@ ul {
     text-transform: capitalize;
     font-weight: bold;
     z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
     p {
       position: relative;
       color: #35495e;
@@ -284,6 +287,7 @@ ul {
   font-family: 'Caveat';
   font-size: 22px;
   font-weight: bold;
+  text-transform: capitalize;
   padding: 5px 6px;
   cursor: pointer;
   svg {

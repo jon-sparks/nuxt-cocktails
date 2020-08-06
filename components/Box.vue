@@ -26,6 +26,7 @@ export default {
     font-size: 32px;
     padding-bottom: 10px;
     margin-bottom: 10px;
+    text-transform: capitalize;
 
     &::after {
       content: '';
