@@ -114,6 +114,7 @@ html {
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 </style>

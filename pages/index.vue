@@ -40,23 +40,37 @@
                 <svg height="568.889" viewBox="0 0 426.667 426.667" width="568.889" xmlns="http://www.w3.org/2000/svg"><path d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"/></svg>
               </button>
             </form>
-            <div v-if="ingredientInput.length && inputFlag" class="suggestions">
-              <p v-for="suggestion in suggested" @click="useSuggested" :data-ingredient="suggestion" :key="suggestion">{{suggestion}}</p>
-            </div>
+              <div v-if="ingredientInput.length && inputFlag" class="suggestions">
+                <p v-for="suggestion in suggested" @click="useSuggested" :data-ingredient="suggestion" :key="suggestion">{{suggestion}}</p>
+              </div>
           </div>
 
-          <ul>
-            <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient" v-on:deleteIngredient="updateIngredients($event)" />
-          </ul>
+          <client-only>
+            <ul v-if="ingredients !== null && ingredients.length !== 0">
+              <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient" v-on:deleteIngredient="updateIngredients($event)" />
+            </ul>
+            <div v-else class="empty-ingredients">
+              <svg height="60" viewBox="0 0 426.667 426.667" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"/></svg>
+              <p>Add your ingredients with the input box above.</p>
+            </div>
+          </client-only>
           
         </Box>
 
         <Box :title="'My Menu'">
-          <button v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">{{cocktail.Name}}</button>
-
-          <Modal>
-
-          </Modal>
+          <client-only>
+            <div v-if="possibleCocktails !== 'undefined'">
+              <button  class="cocktail-button" v-for="cocktail in possibleCocktails" :key="cocktail.id" :data-cocktail="cocktail.id" @click="showMethod">
+                <svg id="_x31_" enable-background="new 0 0 24 24" height="21" viewBox="0 0 24 24" width="21" xmlns="http://www.w3.org/2000/svg"><path d="m20.5 24h-12c-1.378 0-2.5-1.121-2.5-2.5v-15c0-1.379 1.122-2.5 2.5-2.5h12c1.378 0 2.5 1.121 2.5 2.5v15c0 1.379-1.122 2.5-2.5 2.5zm-12-19c-.827 0-1.5.673-1.5 1.5v15c0 .827.673 1.5 1.5 1.5h12c.827 0 1.5-.673 1.5-1.5v-15c0-.827-.673-1.5-1.5-1.5z"/><path d="m4.5 21h-1c-1.378 0-2.5-1.121-2.5-2.5v-16c0-1.379 1.122-2.5 2.5-2.5h12c1.378 0 2.5 1.121 2.5 2.5 0 .276-.224.5-.5.5s-.5-.224-.5-.5c0-.827-.673-1.5-1.5-1.5h-12c-.827 0-1.5.673-1.5 1.5v16c0 .827.673 1.5 1.5 1.5h1c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 17h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 21h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 13h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/><path d="m18.5 9h-8c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h8c.276 0 .5.224.5.5s-.224.5-.5.5z"/></svg>
+                {{cocktail.Name}}
+                <svg class="cocktail-arrow" height="20" viewBox="0 0 64 64" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M54 30H14.101l15.278-14.552a2 2 0 10-2.759-2.897L9.172 29.171A3.978 3.978 0 008 32c0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552a1.999 1.999 0 001.38-3.448L14.038 34H54a2 2 0 000-4z"/></svg>
+              </button>
+            </div>
+          
+            <div v-else class="no-cocktails">
+              <p>You're unable to make any cocktails with your current ingredients.</p>
+            </div>
+          </client-only>
 
         </Box>
 
@@ -69,11 +83,9 @@
 
 <script>
 import db from '../plugins/firebaseinit'
-import MyIngredients from '../components/MyIngredients'
 import Ingredient from '../components/Ingredient'
 import Cocktail from '../components/Cocktail'
 import Box from '../components/Box'
-import Modal from '../components/Modal'
 export default {
   data () {
     return {
@@ -86,11 +98,9 @@ export default {
     }
   },
   components: {
-    MyIngredients,
     Ingredient,
     Cocktail,
-    Box,
-    Modal
+    Box
   },
   created() {
     // this.newIngredients = JSON.parse(this.window.localStorage.getItem('ingredients'))
@@ -101,21 +111,24 @@ export default {
   },
   computed: {
     possibleCocktails() {
-      const newList = []
-      this.cocktails.forEach(cocktail => {
-        const requiredLength = cocktail.Ingredients.length
-        
-        let currentLength = 0
-        this.ingredients.forEach(ingredient => {
-          if(cocktail.Ingredients.indexOf(ingredient) >= 0){
-            currentLength++
-            if(currentLength === requiredLength){
-              newList.push(cocktail)
+      if(this.ingredients !== null){
+        const newList = []
+        this.cocktails.forEach(cocktail => {
+          const requiredLength = cocktail.Ingredients.length
+          
+          let currentLength = 0
+          this.ingredients.forEach(ingredient => {
+            if(cocktail.Ingredients.indexOf(ingredient) >= 0){
+              currentLength++
+              if(currentLength === requiredLength){
+                newList.push(cocktail)
+              }
             }
-          }
+          })
         })
-      })
-      return newList.filter((v,i,a) => a.findIndex(t => (t.Name === v.Name)) === i);
+        return newList.filter((v,i,a) => a.findIndex(t => (t.Name === v.Name)) === i);
+      }
+      
     },
     cocktails() {
       return this.$store.state.cocktails
@@ -146,16 +159,16 @@ export default {
     submitNewIngredient: function(e) {
         e.preventDefault()
         if(this.ingredientInput !== ''){
-          // db.firestore().collection("Ingredients").add({
-          //     Name: this.ingredientInput.toLowerCase()
-          // }).then(() => {
-          //     this.ingredientInput = ''
-          // })
-          let newArray = [...this.ingredients, this.ingredientInput.toLowerCase()]
+          let newArray
+          if(this.ingredients !== null) {
+            newArray = [...this.ingredients, this.ingredientInput.toLowerCase()]
+          } else {
+            newArray = [this.ingredientInput.toLowerCase()]
+          }
           localStorage.setItem('ingredients', JSON.stringify(newArray))
           this.ingredients = JSON.parse(localStorage.getItem('ingredients'))
         }
-
+        this.ingredientInput = ''
     },
     useSuggested: function(e) {
       this.ingredientInput = e.currentTarget.getAttribute('data-ingredient')
@@ -262,5 +275,44 @@ ul {
       }
     }
   }
+}
+.cocktail-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  font-family: 'Caveat';
+  font-size: 22px;
+  font-weight: bold;
+  padding: 5px 6px;
+  cursor: pointer;
+  svg {
+    margin-right: 10px;
+  }
+  .cocktail-arrow {
+    transform: scaleX(-1) scale(0);
+    opacity: 0;
+    transition: all ease 0.2s;
+  }
+  &:hover,
+  &:focus {
+    .cocktail-arrow {
+      transform: scaleX(-1) scale(1) translateX(-10px);
+      opacity: 1;
+    }
+  }
+}
+.empty-ingredients {
+  max-width: 220px;
+  svg {
+    border-radius: 50%;
+    padding: 10px;
+    border: solid #5c7b92 3px;
+    margin: 20px 0;
+    fill: #5c7b92;
+  }
+}
+.no-cocktails {
+  max-width: 220px;
 }
 </style>
