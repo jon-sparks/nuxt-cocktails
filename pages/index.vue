@@ -6,8 +6,9 @@
         My Cocktail Bar
       </h1>
 
+  
       <div class='content-wrapper' v-if="isMethodOpen">
-        <Box :title="`${currentCocktail.Name} Method`">
+        <Box :title="`${currentCocktail.Name} Method`" :class="{ __method: isMethodOpen}" >
           <button @click="toggleMethod" class="box-close">
             <svg height="20" viewBox="0 0 64 64" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M54 30H14.101l15.278-14.552a2 2 0 10-2.759-2.897L9.172 29.171A3.978 3.978 0 008 32c0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552a1.999 1.999 0 001.38-3.448L14.038 34H54a2 2 0 000-4z"/></svg>
             Back
@@ -35,7 +36,7 @@
 
           <div class="new-ingredient">
             <form>
-              <input type="text" placeholder="New ingredient..." v-model="ingredientInput" @focus="inputFlag = true" />
+              <input type="text" placeholder="New ingredient..." v-on:input="ingredientInput = $event.target.value"  @focus="inputFlag = true" @blur="delayedUnfocus" />
               <button v-on:click="submitNewIngredient">
                 <svg height="568.889" viewBox="0 0 426.667 426.667" width="568.889" xmlns="http://www.w3.org/2000/svg"><path d="M405.332 192H234.668V21.332C234.668 9.559 225.109 0 213.332 0 201.559 0 192 9.559 192 21.332V192H21.332C9.559 192 0 201.559 0 213.332c0 11.777 9.559 21.336 21.332 21.336H192v170.664c0 11.777 9.559 21.336 21.332 21.336 11.777 0 21.336-9.559 21.336-21.336V234.668h170.664c11.777 0 21.336-9.559 21.336-21.336 0-11.773-9.559-21.332-21.336-21.332zm0 0"/></svg>
               </button>
@@ -133,7 +134,6 @@ export default {
         })
         return newList.filter((v,i,a) => a.findIndex(t => (t.Name === v.Name)) === i);
       }
-      
     },
     cocktails() {
       return this.$store.state.cocktails
@@ -150,7 +150,7 @@ export default {
       return newArr
     },
     suggested(){
-      return this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput)).length > 0 ? this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput)) : 'No results...'
+      return this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput.toLowerCase())).length > 0 ? this.ingredientsFromCocktails.filter(ingredient => ingredient.includes(this.ingredientInput.toLowerCase())) : 'No results...'
     },
     currentCocktail(){
       let currentCocktail = this.cocktails.filter(cocktail => cocktail.id === this.selectedCocktail)
@@ -187,6 +187,11 @@ export default {
     updateIngredients: function(updatedIngredient) {
       console.log(updatedIngredient)
       this.ingredients = updatedIngredient
+    },
+    delayedUnfocus: function() {
+      setTimeout(() => {
+        this.inputFlag = false
+      }, 300)
     }
   }
 }

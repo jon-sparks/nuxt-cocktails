@@ -25,7 +25,6 @@ export default {
     font-family: 'Caveat';
     font-size: 32px;
     padding-bottom: 10px;
-    padding-top: 30px;
     margin-bottom: 10px;
     text-transform: capitalize;
 
@@ -37,9 +36,6 @@ export default {
       background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
       width: 100%;
       height: 1px;
-    }
-    @media(min-width: 768px) {
-      padding-top: 0;
     }
   }
   &-content {
@@ -103,6 +99,15 @@ export default {
     &:focus {
       svg {
         transform: translateX(-10px);
+      }
+    }
+  }
+  &.__method {
+
+    .box-title {
+      padding-top: 30px;
+      @media(min-width: 768px){
+        padding-top: 0;
       }
     }
   }
