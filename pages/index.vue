@@ -51,7 +51,7 @@
             </div>
 
             <client-only>
-              <ul v-if="ingredients !== null && ingredients.length !== 0">
+              <ul v-if="ingredients !== null && ingredients.length !== 0"  :class="{'ingredient-list': !isMethodOpen}">
                 <Ingredient v-for="ingredient in ingredients" :ingredient="ingredient" :key="ingredient" v-on:deleteIngredient="updateIngredients($event)" />
               </ul>
               <div v-else class="empty-ingredients">
@@ -325,6 +325,13 @@ ul {
 }
 .no-cocktails {
   max-width: 220px;
+}
+.ingredient-list {
+  border-radius: 10px;
+  max-height: 210px;
+  overflow-y: scroll;
+  padding: 5px 5px 5px 5px;
+  box-shadow: inset 0px -24px 23px -27px rgba(0,0,0,0.2), inset 0px 24px 23px -27px rgba(0,0,0,0.2)
 }
 
 .slide-enter-active, .slide-leave-active {
