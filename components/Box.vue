@@ -25,6 +25,7 @@ export default {
     font-family: 'Caveat';
     font-size: 32px;
     padding-bottom: 10px;
+    padding-top: 30px;
     margin-bottom: 10px;
     text-transform: capitalize;
 
@@ -37,10 +38,17 @@ export default {
       width: 100%;
       height: 1px;
     }
+    @media(min-width: 768px) {
+      padding-top: 0;
+    }
   }
   &-content {
     display: flex;
+    flex-direction: column;
     padding: 5%;
+    @media(min-width:768px) {
+      flex-direction: row;
+    }
   }
   &-method {
     text-align: left;
@@ -51,8 +59,9 @@ export default {
   &-ingredients {
     text-align: left;
     min-width: 150px;
-    margin-right: 25px;
-    border-right: solid 1px lightgrey;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px lightgrey;
     h2 {
       margin: 0 20px 10px 0;
       padding-bottom: 10px;
@@ -66,9 +75,13 @@ export default {
       margin-right: 20px;
       font-family: 'Caveat';
       font-size: 23px;
-      li {
-        
-      }
+    }
+    @media(min-width: 768px){
+      margin-right: 25px;
+      border-right: solid 1px lightgrey;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
   }
   &-close {

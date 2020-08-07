@@ -42,13 +42,16 @@ html {
 
 .container {
   margin: 0 auto;
-  padding: 50px;
+  padding: 25px;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   text-align: center;
   background: rgb(245,245,245);
+  @media(min-width: 500px) {
+    padding: 50px;
+  }
 }
 
 .title {
